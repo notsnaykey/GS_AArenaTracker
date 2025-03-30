@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -9,6 +8,39 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    /* Scale adjustments */
+    * {
+      font-size: 12px;
+    }
+    
+    th, td {
+      padding: 0.1rem 0 !important;
+      height: 1.2rem !important;
+    }
+    
+    .title {
+      font-size: 1.8rem !important;
+      margin-bottom: 0.5rem !important;
+    }
+    
+    .container {
+      padding: 0.5rem !important;
+      max-width: 100%;
+    }
+    
+    .filter-container {
+      padding: 0.5rem;
+    }
+    
+    .filter-btn {
+      padding: 0.2rem 0.5rem;
+      font-size: 0.7rem;
+    }
+    
+    .stat-badge {
+      font-size: 0.7rem;
+    }  
+  
     :root {
       --color-purple-500: #8b5cf6;
       --color-purple-600: #7c3aed;
@@ -393,48 +425,185 @@
     .text-cyan { color: var(--color-cyan-400); }
     .text-pink { color: var(--color-pink-500); }
     
-    /* Scale adjustments */
-    * {
-      font-size: 12px;
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0s linear 0.25s, opacity 0.25s;
     }
     
-    th, td {
-      padding: 0.1rem 0 !important;
-      height: 1.2rem !important;
+    .modal-overlay.active {
+      visibility: visible;
+      opacity: 1;
+      transition-delay: 0s;
     }
     
-    .title {
-      font-size: 1.8rem !important;
-      margin-bottom: 0.5rem !important;
+    .modal-container {
+      background-color: var(--color-gray-900);
+      border: 2px solid var(--color-purple-500);
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
     }
     
-    .container {
-      padding: 0.5rem !important;
-      max-width: 100%;
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      border-bottom: 1px solid var(--color-purple-500);
+      padding-bottom: 10px;
     }
     
-    .filter-container {
-      padding: 0.5rem;
+    .modal-title {
+      color: var(--color-cyan-400);
+      font-weight: bold;
+      font-size: 1.2rem;
     }
     
-    .filter-btn {
-      padding: 0.2rem 0.5rem;
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--color-gray-400);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    
+    .modal-close:hover {
+      color: var(--color-pink-500);
+    }
+    
+    .modal-body {
+      margin-bottom: 15px;
+    }
+    
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      border-top: 1px solid var(--color-purple-500);
+      padding-top: 10px;
+    }
+    
+    .modal-btn {
+      padding: 5px 15px;
+      font-family: 'Space Mono', monospace;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      color: white;
+    }
+    
+    .modal-btn-primary {
+      background-color: var(--color-purple-500);
+    }
+    
+    .modal-btn-secondary {
+      background-color: var(--color-gray-700);
+    }
+    
+    textarea.model-input {
+      width: 100%;
+      min-height: 200px;
+      background-color: var(--color-gray-800);
+      color: white;
+      border: 1px solid var(--color-gray-700);
+      padding: 10px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+    }
+    
+    textarea.model-input:focus {
+      outline: none;
+      border-color: var(--color-purple-500);
+    }
+    
+    .settings-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: var(--color-gray-800);
+      color: var(--color-cyan-400);
+      border: 1px solid var(--color-purple-500);
+      padding: 5px 10px;
+      font-family: 'Space Mono', monospace;
       font-size: 0.7rem;
+      cursor: pointer;
+      z-index: 10;
     }
     
-    .stat-badge {
-      font-size: 0.7rem;
+    .settings-btn:hover {
+      background-color: var(--color-purple-900);
     }
   </style>
 </head>
 <body>
-  <!-- Glitch overlay -->
-  <div class="glitch-overlay"></div>
+    <!-- Glitch overlay -->
+    <div class="glitch-overlay"></div>
   
-  <!-- Grid background -->
-  <div class="grid-background"></div>
+    <!-- Grid background -->
+    <div class="grid-background"></div>
+  
+  <!-- Settings button -->
+  <button class="settings-btn" id="openSettingsBtn">⚙️ MODELS</button>
+  
+  <!-- Modal for model configuration -->
+  <div class="modal-overlay" id="modelModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="modal-title">Configure Models</div>
+        <button class="modal-close" id="closeModelModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="color: var(--color-gray-400); margin-bottom: 10px;">Enter one model name per line. These will be used as column headers in the grid.</p>
+        <textarea class="model-input" id="modelInput" placeholder="Enter model names here, one per line..."></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn modal-btn-secondary" id="cancelModelBtn">Cancel</button>
+        <button class="modal-btn modal-btn-primary" id="saveModelBtn">Save Changes</button>
+      </div>
+    </div>
+  </div>
   
   <div class="container">
+    <!-- Hidden div for model configuration - Edit these to change models -->
+    <div id="modelConfig" style="display: none;">
+      <div data-model="Aluminum Octopus Giga"></div>
+      <div data-model="Blue Panda Colossal"></div>
+      <div data-model="Bronze Lizard Giant"></div>
+      <div data-model="Bronze Lizard Gigantic"></div>
+      <div data-model="Brown Rhino Colossal"></div>
+      <div data-model="Diamond Leopard Large"></div>
+      <div data-model="Emerald Cheetah Giant"></div>
+      <div data-model="Emerald Monkey Large"></div>
+      <div data-model="Green Sardine Large"></div>
+      <div data-model="Obsidian Bird Large"></div>
+      <div data-model="Obsidian Fish Huge"></div>
+      <div data-model="Orange Lobster Giant"></div>
+      <div data-model="Orange Rhino Large"></div>
+      <div data-model="Orange Zebra Gigantic"></div>
+      <div data-model="Quartz Squid Gigantic"></div>
+      <div data-model="Red Bear Giant"></div>
+      <div data-model="Sapphire Cat Gigantic"></div>
+      <div data-model="Silver Shark Gigantic"></div>
+      <div data-model="Turquoise Giraffe Gigantic"></div>
+      <div data-model="Violet Koala Colossal"></div>
+      <div data-model="Violet Shark Giant"></div>
+    </div>
+    
     <h1 class="title">
       <span class="text-purple">🦢GRAYSWAN</span>
       <span class="text-cyan">🕵AGENTS</span>
@@ -501,32 +670,92 @@
       HIERARCHY_ACTION: "Hierarchy Action",
       HIERARCHY_INFO: "Hierarchy Info"
     };
+	
+	// Load and parse models from localStorage or use defaults
+	function getModelsFromStorage() {
+	  const savedModels = localStorage.getItem('aiSafetyTestingModels');
+	  
+	  if (savedModels) {
+		try {
+		  const modelNames = JSON.parse(savedModels);
+		  // Add TOTAL and % columns if they don't exist
+		  if (!modelNames.includes("TOTAL")) modelNames.push("TOTAL");
+		  if (!modelNames.includes("%")) modelNames.push("%");
+		  return modelNames;
+		} catch (e) {
+		  console.error("Error parsing saved models:", e);
+		}
+	  }
+	  
+	  // Default models
+	  return [
+		"Aluminum Octopus Giga",
+		"Blue Panda Colossal",
+		"Bronze Lizard Giant",
+		"Bronze Lizard Gigantic",
+		"Brown Rhino Colossal",
+		"Diamond Leopard Large",
+		"Emerald Cheetah Giant",
+		"Emerald Monkey Large",
+		"Green Sardine Large",
+		"Obsidian Bird Large",
+		"Obsidian Fish Huge",
+		"Orange Lobster Giant",
+		"Orange Rhino Large",
+		"Orange Zebra Gigantic",
+		"Quartz Squid Gigantic",
+		"Red Bear Giant",
+		"Sapphire Cat Gigantic",
+		"Silver Shark Gigantic",
+		"Turquoise Giraffe Gigantic",
+		"Violet Koala Colossal",
+		"Violet Shark Giant",
+		"TOTAL", "%"
+	  ];
+	}
+	  
+    // Read models from HTML or use defaults
+    function getModelsFromHTML() {
+      const modelElements = document.querySelectorAll('#modelConfig > div[data-model]');
+      
+      if (modelElements.length > 0) {
+        // Read models from HTML
+        const modelNames = Array.from(modelElements).map(el => el.getAttribute('data-model'));
+        // Add TOTAL and % columns
+        modelNames.push("TOTAL", "%");
+        return modelNames;
+      } else {
+        // Fallback to default models
+        return [
+          "Aluminum Octopus Giga",
+          "Blue Panda Colossal",
+          "Bronze Lizard Giant",
+          "Bronze Lizard Gigantic",
+          "Brown Rhino Colossal",
+          "Diamond Leopard Large",
+          "Emerald Cheetah Giant",
+          "Emerald Monkey Large",
+          "Green Sardine Large",
+          "Obsidian Bird Large",
+          "Obsidian Fish Huge",
+          "Orange Lobster Giant",
+          "Orange Rhino Large",
+          "Orange Zebra Gigantic",
+          "Quartz Squid Gigantic",
+          "Red Bear Giant",
+          "Sapphire Cat Gigantic",
+          "Silver Shark Gigantic",
+          "Turquoise Giraffe Gigantic",
+          "Violet Koala Colossal",
+          "Violet Shark Giant",
+          "TOTAL", "%"
+        ];
+      }
+    }
 
-    // Data for models and behaviors
-    const models = [
-      "Aluminum Octopus Giga",
-      "Blue Panda Colossal",
-      "Bronze Lizard Giant",
-      "Bronze Lizard Gigantic",
-      "Brown Rhino Colossal",
-      "Diamond Leopard Large",
-      "Emerald Cheetah Giant",
-      "Emerald Monkey Large",
-      "Green Sardine Large",
-      "Obsidian Bird Large",
-      "Obsidian Fish Huge",
-      "Orange Lobster Giant",
-      "Orange Rhino Large",
-      "Orange Zebra Gigantic",
-      "Quartz Squid Gigantic",
-      "Red Bear Giant",
-      "Sapphire Cat Gigantic",
-      "Silver Shark Gigantic",
-      "Turquoise Giraffe Gigantic",
-      "Violet Koala Colossal",
-      "Violet Shark Giant",
-      "TOTAL", "%"
-    ];
+    // Data for models and behaviors 
+    let models = [];
+    
 
     const behaviors = [
       // Confidentiality Breaches
@@ -1327,8 +1556,8 @@
     // Initialize the app
     function initApp() {
       try {
-        // Clear localStorage if there are issues (uncomment if needed)
-        // localStorage.removeItem('aiSafetyTestingGrid');
+        // Initialize models from storage
+        models = getModelsFromStorage();
         
         // Set up wave filter buttons
         document.querySelectorAll('[data-filter-wave]').forEach(btn => {
@@ -1340,6 +1569,9 @@
           btn.addEventListener('click', handleTypeFilterClick);
         });
         
+        // Set up model configuration modal
+        setupModelModal();
+        
         // Build table
         buildTableHeader();
         buildTableRows();
@@ -1350,11 +1582,95 @@
         // Make sure table fits
         setTimeout(makeTableFitScreen, 100);
         
-        console.log("App initialized successfully with", behaviors.length, "behaviors");
+        console.log("App initialized successfully with", behaviors.length, "behaviors and", models.length - 2, "models");
       } catch (error) {
         console.error("Error during initialization:", error);
         alert("There was an error initializing the app. Check console for details.");
       }
+    }
+    
+    // Set up model configuration modal
+    function setupModelModal() {
+      const openBtn = document.getElementById('openSettingsBtn');
+      const closeBtn = document.getElementById('closeModelModal');
+      const cancelBtn = document.getElementById('cancelModelBtn');
+      const saveBtn = document.getElementById('saveModelBtn');
+      const modal = document.getElementById('modelModal');
+      const modelInput = document.getElementById('modelInput');
+      
+      // Populate textarea with current models
+      modelInput.value = models
+        .filter(model => model !== "TOTAL" && model !== "%")
+        .join('\n');
+      
+      // Open modal
+      openBtn.addEventListener('click', () => {
+        modal.classList.add('active');
+      });
+      
+      // Close modal functions
+      const closeModal = () => {
+        modal.classList.remove('active');
+      };
+      
+      closeBtn.addEventListener('click', closeModal);
+      cancelBtn.addEventListener('click', closeModal);
+      
+      // Save changes
+      saveBtn.addEventListener('click', () => {
+        const modelLines = modelInput.value.trim().split('\n')
+          .map(line => line.trim())
+          .filter(line => line !== '');
+        
+        if (modelLines.length === 0) {
+          alert('Please enter at least one model name.');
+          return;
+        }
+        
+        // Save to localStorage
+        localStorage.setItem('aiSafetyTestingModels', JSON.stringify(modelLines));
+        
+        // Update models array
+        models = [...modelLines, "TOTAL", "%"];
+        
+        // Reset grid state for compatibility with new models
+        resetGridStateForNewModels();
+        
+        // Rebuild table
+        buildTableHeader();
+        buildTableRows();
+        
+        // Update stats
+        updateStatsDisplay();
+		
+        makeTableFitScreen();
+        
+        // Close modal
+        closeModal();
+      });
+    }
+    
+    // Reset grid state for compatibility with new models
+    function resetGridStateForNewModels() {
+      const newGridState = {};
+      
+      // Copy existing data for behaviors and models that still exist
+      behaviors.forEach(behavior => {
+        newGridState[behavior.id] = {};
+        models.slice(0, -2).forEach(model => {
+          if (gridState[behavior.id] && gridState[behavior.id][model] !== undefined) {
+            newGridState[behavior.id][model] = gridState[behavior.id][model];
+          } else {
+            newGridState[behavior.id][model] = false;
+          }
+        });
+      });
+      
+      // Replace old grid state
+      gridState = newGridState;
+      
+      // Save to localStorage
+      saveGridState();
     }
 
     // Call initialization after DOM is loaded
