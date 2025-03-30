@@ -657,7 +657,7 @@
         <span class="brand">GS.A.A.T</span> / Made with 💙 by @snaykey 
       </div>
       <div class="footer-right">
-        <span class="interface-version">26.03.2025</span> V0.2
+        <span class="interface-version">30.03.2025</span> V0.3
       </div>
     </div>
   </div>
@@ -1064,7 +1064,7 @@
         if (index < models.length - 2) { // Regular model headers
           const chars = model.split('');
           // Only take the first letter of each word to save space
-          const firstLetters = model.split(' ').map(word => word[0]).join('<br>');
+          const firstLetters = model.split(' ').map(word => word.substring(0, 5)).join('<br>');
           th.innerHTML = firstLetters;
           th.title = model; // Show full name on hover
         } else { // TOTAL and % headers
