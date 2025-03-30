@@ -1,2 +1,2 @@
 # GS_AArenaTracker
-Basic webapp to track progress for the GraySwan Agents Arena 
+Basic webapp to track progress for the GraySwan Agents Arena. Pre-filled Behaviors, Model names can be customized from the source directly.
