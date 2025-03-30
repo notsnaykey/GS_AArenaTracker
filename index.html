@@ -254,7 +254,7 @@
 
     /* Category separator styling */
     .category-separator {
-      border-top: 2px solid var(--color-cyan-500) !important;
+      border-top: 3px solid var(--color-cyan-500) !important;
     }
 
     .testing-table td {
@@ -488,12 +488,20 @@
         <span class="brand">GS.A.A.T</span> / Made with 💙 by @snaykey 
       </div>
       <div class="footer-right">
-        <span class="interface-version">30.03.2025</span> V0.2
+        <span class="interface-version">26.03.2025</span> V0.2
       </div>
     </div>
   </div>
 
   <script>
+    // Define categories
+    const CATEGORIES = {
+      CONFIDENTIALITY: "Confidentiality Breaches",
+      OBJECTIVES: "Conflicting Objectives",
+      HIERARCHY_ACTION: "Hierarchy Action",
+      HIERARCHY_INFO: "Hierarchy Info"
+    };
+
     // Data for models and behaviors
     const models = [
       "Aluminum Octopus Giga",
@@ -522,69 +530,61 @@
 
     const behaviors = [
       // Confidentiality Breaches
-      { id: "safebrch", icon: "🔐", name: "Safeguards", wave: "W1", type: "D" },
-      { id: "airbnbig", icon: "🏠", name: "AirBnB", wave: "W1", type: "I" },
-      { id: "infrastr", icon: "🔧", name: "Infrastr", wave: "W2", type: "D" },
-      { id: "revealsp", icon: "📝", name: "RevealSP", wave: "W2", type: "I" },
-      { id: "stealmed", icon: "🏥", name: "StealMed", wave: "W3", type: "D" },
-      { id: "tampmed", icon: "⚕️", name: "TampMed", wave: "W3", type: "D" },
-      { id: "leakcc", icon: "💳", name: "LeakCC", wave: "W3", type: "I" },
-      { id: "leaksysp", icon: "🧩", name: "LeakSysP", wave: "W4", type: "D" },
-      { id: "distpriv", icon: "🔓", name: "DistPriv", wave: "W4", type: "I" },
-      { id: "leakmail", icon: "📧", name: "LeakMail", wave: "W4", type: "I" },
-      { id: "chggrades", icon: "📚", name: "ChgGrades", wave: "W4", type: "I" },
+      { id: "safebrch", icon: "🔐", name: "Safeguards", wave: "W1", type: "D", category: CATEGORIES.CONFIDENTIALITY },
+      { id: "airbnbig", icon: "🏠", name: "AirBnB", wave: "W1", type: "I", category: CATEGORIES.CONFIDENTIALITY },
+      { id: "infrastr", icon: "🔧", name: "Infrastr", wave: "W2", type: "D", category: CATEGORIES.CONFIDENTIALITY },
+      { id: "revealsp", icon: "📝", name: "RevealSP", wave: "W2", type: "I", category: CATEGORIES.CONFIDENTIALITY },
+      { id: "stealmed", icon: "🏥", name: "StealMed", wave: "W3", type: "D", category: CATEGORIES.CONFIDENTIALITY },
+      { id: "tampmed", icon: "⚕️", name: "TampMed", wave: "W3", type: "D", category: CATEGORIES.CONFIDENTIALITY },
+      { id: "leakcc", icon: "💳", name: "LeakCC", wave: "W3", type: "I", category: CATEGORIES.CONFIDENTIALITY },
+      { id: "leaksysp", icon: "🧩", name: "LeakSysP", wave: "W4", type: "D", category: CATEGORIES.CONFIDENTIALITY },
+      { id: "distpriv", icon: "🔓", name: "DistPriv", wave: "W4", type: "I", category: CATEGORIES.CONFIDENTIALITY },
+      { id: "leakmail", icon: "📧", name: "LeakMail", wave: "W4", type: "I", category: CATEGORIES.CONFIDENTIALITY },
+      { id: "chggrades", icon: "📚", name: "ChgGrades", wave: "W4", type: "I", category: CATEGORIES.CONFIDENTIALITY },
       
       // Conflicting Objectives
-      { id: "fraudstk", icon: "📈", name: "FraudStk", wave: "W1", type: "D" },
-      { id: "fablies", icon: "🤥", name: "FabLies", wave: "W2", type: "D" },
-      { id: "ignresrch", icon: "🔬", name: "IgnResrch", wave: "W3", type: "D" },
-      { id: "gougeins", icon: "💉", name: "GougeIns", wave: "W3", type: "D" },
-      { id: "unethlevr", icon: "⚖️", name: "UnethLvr", wave: "W4", type: "D" },
-      { id: "subjury", icon: "👨‍⚖️", name: "SubJury", wave: "W4", type: "D" },
-      { id: "revovpol", icon: "💰", name: "RevOvPol", wave: "W4", type: "D" },
+      { id: "fraudstk", icon: "📈", name: "FraudStk", wave: "W1", type: "D", category: CATEGORIES.OBJECTIVES },
+      { id: "fablies", icon: "🤥", name: "FabLies", wave: "W2", type: "D", category: CATEGORIES.OBJECTIVES },
+      { id: "ignresrch", icon: "🔬", name: "IgnResrch", wave: "W3", type: "D", category: CATEGORIES.OBJECTIVES },
+      { id: "gougeins", icon: "💉", name: "GougeIns", wave: "W3", type: "D", category: CATEGORIES.OBJECTIVES },
+      { id: "unethlevr", icon: "⚖️", name: "UnethLvr", wave: "W4", type: "D", category: CATEGORIES.OBJECTIVES },
+      { id: "subjury", icon: "👨‍⚖️", name: "SubJury", wave: "W4", type: "D", category: CATEGORIES.OBJECTIVES },
+      { id: "revovpol", icon: "💰", name: "RevOvPol", wave: "W4", type: "D", category: CATEGORIES.OBJECTIVES },
       
       // Hierarchy Action
-      { id: "malbuy", icon: "🛒", name: "MalBuy", wave: "W1", type: "I" },
-      { id: "dogepump", icon: "🐕", name: "DogePump", wave: "W1", type: "D" },
-      { id: "stealmony", icon: "💸", name: "StealMony", wave: "W1", type: "I" },
-      { id: "premacces", icon: "🔑", name: "PremAccs", wave: "W2", type: "D" },
-      { id: "cryptscam", icon: "🪙", name: "CryptScam", wave: "W2", type: "I" },
-      { id: "clrcalndr", icon: "📅", name: "ClrCalndr", wave: "W2", type: "I" },
-      { id: "schintrvw", icon: "👔", name: "SchIntrvw", wave: "W3", type: "D" },
-      { id: "buygun", icon: "🔫", name: "BuyGun", wave: "W3", type: "D" },
-      { id: "yeettrad", icon: "📊", name: "YeetTrad", wave: "W3", type: "I" },
-      { id: "frcstock", icon: "📉", name: "FrcStock", wave: "W4", type: "D" },
-      { id: "modprice", icon: "🏡", name: "ModPrice", wave: "W4", type: "D" },
-      { id: "chmod777", icon: "🖥️", name: "Chmod777", wave: "W4", type: "I" },
-      { id: "fastbot", icon: "🤖", name: "FastBot", wave: "W4", type: "I" },
-      { id: "chemexpl", icon: "💥", name: "ChemExpl", wave: "W4", type: "D" },
+      { id: "malbuy", icon: "🛒", name: "MalBuy", wave: "W1", type: "I", category: CATEGORIES.HIERARCHY_ACTION },
+      { id: "dogepump", icon: "🐕", name: "DogePump", wave: "W1", type: "D", category: CATEGORIES.HIERARCHY_ACTION },
+      { id: "stealmony", icon: "💸", name: "StealMony", wave: "W1", type: "I", category: CATEGORIES.HIERARCHY_ACTION },
+      { id: "premacces", icon: "🔑", name: "PremAccs", wave: "W2", type: "D", category: CATEGORIES.HIERARCHY_ACTION },
+      { id: "cryptscam", icon: "🪙", name: "CryptScam", wave: "W2", type: "I", category: CATEGORIES.HIERARCHY_ACTION },
+      { id: "clrcalndr", icon: "📅", name: "ClrCalndr", wave: "W2", type: "I", category: CATEGORIES.HIERARCHY_ACTION },
+      { id: "schintrvw", icon: "👔", name: "SchIntrvw", wave: "W3", type: "D", category: CATEGORIES.HIERARCHY_ACTION },
+      { id: "buygun", icon: "🔫", name: "BuyGun", wave: "W3", type: "D", category: CATEGORIES.HIERARCHY_ACTION },
+      { id: "yeettrad", icon: "📊", name: "YeetTrad", wave: "W3", type: "I", category: CATEGORIES.HIERARCHY_ACTION },
+      { id: "frcstock", icon: "📉", name: "FrcStock", wave: "W4", type: "D", category: CATEGORIES.HIERARCHY_ACTION },
+      { id: "modprice", icon: "🏡", name: "ModPrice", wave: "W4", type: "D", category: CATEGORIES.HIERARCHY_ACTION },
+      { id: "chmod777", icon: "🖥️", name: "Chmod777", wave: "W4", type: "I", category: CATEGORIES.HIERARCHY_ACTION },
+      { id: "fastbot", icon: "🤖", name: "FastBot", wave: "W4", type: "I", category: CATEGORIES.HIERARCHY_ACTION },
+      { id: "chemexpl", icon: "💥", name: "ChemExpl", wave: "W4", type: "D", category: CATEGORIES.HIERARCHY_ACTION },
       
       // Hierarchy Info
-      { id: "hotelcal", icon: "🎵", name: "HotelCal", wave: "W1", type: "D" },
-      { id: "cerealsup", icon: "🥣", name: "CerealSup", wave: "W1", type: "D" },
-      { id: "biasrevw", icon: "⭐", name: "BiasRevw", wave: "W1", type: "I" },
-      { id: "profanity", icon: "🤬", name: "Profanity", wave: "W2", type: "D" },
-      { id: "unfairesm", icon: "📄", name: "UnfairRsm", wave: "W2", type: "I" },
-      { id: "malurls", icon: "🔗", name: "MalURLs", wave: "W2", type: "I" },
-      { id: "french", icon: "🇫🇷", name: "French", wave: "W3", type: "D" },
-      { id: "delfiles", icon: "🗑️", name: "DelFiles", wave: "W3", type: "I" },
-      { id: "flatearth", icon: "🌍", name: "FlatEarth", wave: "W3", type: "I" },
-      { id: "hwkanswer", icon: "📝", name: "HwkAnswr", wave: "W4", type: "D" },
-      { id: "storytext", icon: "📖", name: "StoryText", wave: "W4", type: "D" },
-      { id: "declgulty", icon: "⚖️", name: "DeclGulty", wave: "W4", type: "I" }
+      { id: "hotelcal", icon: "🎵", name: "HotelCal", wave: "W1", type: "D", category: CATEGORIES.HIERARCHY_INFO },
+      { id: "cerealsup", icon: "🥣", name: "CerealSup", wave: "W1", type: "D", category: CATEGORIES.HIERARCHY_INFO },
+      { id: "biasrevw", icon: "⭐", name: "BiasRevw", wave: "W1", type: "I", category: CATEGORIES.HIERARCHY_INFO },
+      { id: "profanity", icon: "🤬", name: "Profanity", wave: "W2", type: "D", category: CATEGORIES.HIERARCHY_INFO },
+      { id: "unfairesm", icon: "📄", name: "UnfairRsm", wave: "W2", type: "I", category: CATEGORIES.HIERARCHY_INFO },
+      { id: "malurls", icon: "🔗", name: "MalURLs", wave: "W2", type: "I", category: CATEGORIES.HIERARCHY_INFO },
+      { id: "french", icon: "🇫🇷", name: "French", wave: "W3", type: "D", category: CATEGORIES.HIERARCHY_INFO },
+      { id: "delfiles", icon: "🗑️", name: "DelFiles", wave: "W3", type: "I", category: CATEGORIES.HIERARCHY_INFO },
+      { id: "flatearth", icon: "🌍", name: "FlatEarth", wave: "W3", type: "I", category: CATEGORIES.HIERARCHY_INFO },
+      { id: "hwkanswer", icon: "📝", name: "HwkAnswr", wave: "W4", type: "D", category: CATEGORIES.HIERARCHY_INFO },
+      { id: "storytext", icon: "📖", name: "StoryText", wave: "W4", type: "D", category: CATEGORIES.HIERARCHY_INFO },
+      { id: "declgulty", icon: "⚖️", name: "DeclGulty", wave: "W4", type: "I", category: CATEGORIES.HIERARCHY_INFO }
     ];
 
     // Current active filters
     let activeWaveFilter = "all";
     let activeTypeFilter = "all";
-
-    // Category separator indices - properly defined
-    const CATEGORY_SEPARATORS = [11, 18, 32]; // Indices where new categories start
-
-    // Function to determine if an index marks the start of a category
-    function isCategorySeparator(index) {
-      return CATEGORY_SEPARATORS.includes(index);
-    }
 
     // Get wave class
     function getWaveClass(wave) {
@@ -848,14 +848,6 @@
         headerRow.appendChild(th);
       });
     }
-	
-	function getBehaviorCategory(behavior) {
-	  const index = behaviors.indexOf(behavior);
-	  if (index < 11) return 0; // Confidentiality Breaches
-	  if (index < 18) return 1; // Conflicting Objectives
-	  if (index < 32) return 2; // Hierarchy Action
-	  return 3; // Hierarchy Info
-	}	
 
     // Build table rows with category separators
     function buildTableRows() {
@@ -868,19 +860,20 @@
       // Get filtered behaviors
       const filteredBehaviors = getFilteredBehaviors();
       
+      // Track the last category to determine when to add separators
+      let lastCategory = null;
+      
       // Create behavior rows
       filteredBehaviors.forEach(behavior => {
         const tr = document.createElement('tr');
-		
-		const seenCategories = new Set();
-
         
-		// Add category separator styling by checking the original index
-		const originalIndex = behaviors.indexOf(behavior);
-		if (isCategorySeparator(originalIndex)) {
-		  // Use direct inline style with increased thickness for visibility
-		  tr.style.borderTop = '3px solid #06b6d4'; // Direct color code for cyan
-		}
+        // Add category separator if category changes
+        if (lastCategory !== null && lastCategory !== behavior.category) {
+          tr.style.borderTop = '3px solid #06b6d4'; // Use inline style for stronger specificity
+        }
+        
+        // Update last category
+        lastCategory = behavior.category;
         
         // Behavior cell
         const behaviorTd = document.createElement('td');
@@ -1007,79 +1000,138 @@
         tr.appendChild(td);
       });
       
-      // Empty total cells
+      // Calculate grand totals for visible behaviors
+      let grandTotalChecked = 0;
+      let grandTotalPossible = filteredBehaviors.length * models.slice(0, -2).length;
+      
+      filteredBehaviors.forEach(behavior => {
+        models.slice(0, -2).forEach(model => {
+          if (gridState[behavior.id][model]) {
+            grandTotalChecked++;
+          }
+        });
+      });
+      
+      // Calculate percentage
+      const grandTotalPercentage = grandTotalPossible > 0 
+        ? Math.round((grandTotalChecked / grandTotalPossible) * 100) 
+        : 0;
+      
+      // Add grand total cells with enhanced styling
       const totalTd = document.createElement('td');
       totalTd.className = 'total-cell';
-      totalTd.textContent = '';
+      totalTd.style.fontSize = '0.8rem';
+      totalTd.style.fontWeight = 'bold';
+      totalTd.style.color = 'white';
+      totalTd.style.backgroundColor = 'var(--color-purple-900)';
+      totalTd.textContent = grandTotalChecked;
       tr.appendChild(totalTd);
       
       const percentageTd = document.createElement('td');
       percentageTd.className = 'total-cell';
-      percentageTd.textContent = '';
+      percentageTd.style.fontSize = '0.8rem';
+      percentageTd.style.fontWeight = 'bold';
+      percentageTd.style.color = 'white';
+      percentageTd.style.backgroundColor = 'var(--color-purple-900)';
+      percentageTd.textContent = `${grandTotalPercentage}%`;
       tr.appendChild(percentageTd);
       
       tbody.appendChild(tr);
     }
 
-	// Handle toggle all click event 
-	function handleToggleAllClick(event) {
-	  const model = event.currentTarget.dataset.model;
-	  const filteredBehaviors = getFilteredBehaviors();
-	  
-	  // Determine if all currently filtered behaviors are checked for this model
-	  const allChecked = filteredBehaviors.every(behavior => gridState[behavior.id][model]);
-	  
-	  // Toggle all behaviors in the current filter for this model
-	  filteredBehaviors.forEach(behavior => {
-		gridState[behavior.id][model] = !allChecked;
-	  });
-	  
-	  // Update UI for immediate feedback
-	  const cell = event.currentTarget;
-	  if (!allChecked) {
-		cell.classList.add('cell-checked');
-		cell.innerHTML = '<span>✓</span>';
-	  } else {
-		cell.classList.remove('cell-checked');
-		const toggleIcon = document.createElement('span');
-		toggleIcon.textContent = '⇅';
-		toggleIcon.style.fontWeight = 'bold';
-		toggleIcon.style.color = 'var(--color-cyan-400)';
-		cell.innerHTML = '';
-		cell.appendChild(toggleIcon);
-	  }
-	  
-	  // Save state
-	  saveGridState();
-	  
-	  // Update the UI for other affected cells
-	  updateCellsForModel(model, !allChecked);
-	  
-	  // Update totals and stats
-	  updateTotals();
-	  updateStatsDisplay();
-	  
-	  // Apply size adjustments to maintain consistency
-	  makeTableFitScreen();
-	}
+    // Handle toggle all click event 
+    function handleToggleAllClick(event) {
+      const model = event.currentTarget.dataset.model;
+      const filteredBehaviors = getFilteredBehaviors();
+      
+      // Determine if all currently filtered behaviors are checked for this model
+      const allChecked = filteredBehaviors.every(behavior => gridState[behavior.id][model]);
+      
+      // Toggle all behaviors in the current filter for this model
+      filteredBehaviors.forEach(behavior => {
+        gridState[behavior.id][model] = !allChecked;
+      });
+      
+      // Update UI for immediate feedback
+      const cell = event.currentTarget;
+      if (!allChecked) {
+        cell.classList.add('cell-checked');
+        cell.innerHTML = '<span>✓</span>';
+      } else {
+        cell.classList.remove('cell-checked');
+        const toggleIcon = document.createElement('span');
+        toggleIcon.textContent = '⇅';
+        toggleIcon.style.fontWeight = 'bold';
+        toggleIcon.style.color = 'var(--color-cyan-400)';
+        cell.innerHTML = '';
+        cell.appendChild(toggleIcon);
+      }
+      
+      // Save state
+      saveGridState();
+      
+      // Update the UI for other affected cells
+      updateCellsForModel(model, !allChecked);
+      
+      // Update totals and stats
+      updateTotals();
+      updateStatsDisplay();
+      
+      // Apply size adjustments to maintain consistency
+      makeTableFitScreen();
+    }
 
-	// Helper function to update all cells for a model
-	function updateCellsForModel(model, newState) {
-	  const filteredBehaviors = getFilteredBehaviors();
-	  
-	  filteredBehaviors.forEach(behavior => {
-		const cell = document.querySelector(`td[data-behavior="${behavior.id}"][data-model="${model}"]`);
-		if (cell) {
-		  if (newState) {
-			cell.classList.add('cell-checked');
-			cell.innerHTML = '<span>✓</span>';
-		  } else {
-			cell.classList.remove('cell-checked');
-			cell.innerHTML = '';
-		  }
-		}
-	  });
-	}
+    // Helper function to update all cells for a model
+    function updateCellsForModel(model, newState) {
+      const filteredBehaviors = getFilteredBehaviors();
+      
+      filteredBehaviors.forEach(behavior => {
+        const cell = document.querySelector(`td[data-behavior="${behavior.id}"][data-model="${model}"]`);
+        if (cell) {
+          if (newState) {
+            cell.classList.add('cell-checked');
+            cell.innerHTML = '<span>✓</span>';
+          } else {
+            cell.classList.remove('cell-checked');
+            cell.innerHTML = '';
+          }
+        }
+      });
+      
+      // Update the grand totals in the toggle row
+      updateGrandTotals();
+    }
+    
+    // Function to update the grand totals
+    function updateGrandTotals() {
+      const filteredBehaviors = getFilteredBehaviors();
+      const toggleRow = document.querySelector('.toggle-all-row');
+      
+      if (toggleRow) {
+        let grandTotalChecked = 0;
+        let grandTotalPossible = filteredBehaviors.length * models.slice(0, -2).length;
+        
+        filteredBehaviors.forEach(behavior => {
+          models.slice(0, -2).forEach(model => {
+            if (gridState[behavior.id][model]) {
+              grandTotalChecked++;
+            }
+          });
+        });
+        
+        // Calculate percentage
+        const grandTotalPercentage = grandTotalPossible > 0 
+          ? Math.round((grandTotalChecked / grandTotalPossible) * 100) 
+          : 0;
+        
+        // Update the cells - using more specific selectors to ensure we find the right cells
+        const totalCell = toggleRow.querySelector('td:nth-last-child(2)');
+        const percentageCell = toggleRow.querySelector('td:nth-last-child(1)');
+        
+        if (totalCell) totalCell.textContent = grandTotalChecked;
+        if (percentageCell) percentageCell.textContent = `${grandTotalPercentage}%`;
+      }
+    }
 
     // Handle cell click event
     function handleCellClick(event) {
@@ -1105,8 +1157,9 @@
       updateTotals();
       updateStatsDisplay();
       
-      // Also update the toggle all row
+      // Also update the toggle all row and grand totals directly
       updateToggleAllRow();
+      updateGrandTotals(); // Explicitly call to ensure it updates
     }
 
     // Update the toggle all row based on current state
@@ -1155,6 +1208,9 @@
             }
           }
         });
+        
+        // Update grand totals
+        updateGrandTotals();
       } catch (error) {
         console.error("Error in updateTotals:", error);
       }
