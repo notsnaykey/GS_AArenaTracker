@@ -454,7 +454,7 @@
       padding: 20px;
       width: 80%;
       max-width: 600px;
-      max-height: 80vh;
+      max-height: 90vh;
       overflow-y: auto;
       position: relative;
     }
@@ -558,7 +558,7 @@
     <div class="grid-background"></div>
   
   <!-- Settings button -->
-  <button class="settings-btn" id="openSettingsBtn">⚙️ MODELS</button>
+  <button class="settings-btn" id="openSettingsBtn">➕ IMPORT MODELS</button>
   
   <!-- Modal for model configuration -->
   <div class="modal-overlay" id="modelModal">
@@ -568,7 +568,8 @@
         <button class="modal-close" id="closeModelModal">&times;</button>
       </div>
       <div class="modal-body">
-        <p style="color: var(--color-gray-400); margin-bottom: 10px;">Enter one model name per line. These will be used as column headers in the grid.</p>
+        <p style="color: var(--color-gray-400); margin-bottom: 10px;">Enter one model name per line. These will be used as column headers in the grid. Can also copy&amp;paste directly from the GS site Model selector:<i><br>Blue Panda Colossal<br>21 breaks<br>Bronze Lizard Giant<br>20 breaks<br>...</i><br>The <i>X breaks</i> lines are automatically ignored.
+		</p>
         <textarea class="model-input" id="modelInput" placeholder="Enter model names here, one per line..."></textarea>
       </div>
       <div class="modal-footer">
@@ -581,27 +582,27 @@
   <div class="container">
     <!-- Hidden div for model configuration - Edit these to change models -->
     <div id="modelConfig" style="display: none;">
-      <div data-model="Aluminum Octopus Giga"></div>
-      <div data-model="Blue Panda Colossal"></div>
-      <div data-model="Bronze Lizard Giant"></div>
-      <div data-model="Bronze Lizard Gigantic"></div>
-      <div data-model="Brown Rhino Colossal"></div>
-      <div data-model="Diamond Leopard Large"></div>
-      <div data-model="Emerald Cheetah Giant"></div>
-      <div data-model="Emerald Monkey Large"></div>
-      <div data-model="Green Sardine Large"></div>
-      <div data-model="Obsidian Bird Large"></div>
-      <div data-model="Obsidian Fish Huge"></div>
-      <div data-model="Orange Lobster Giant"></div>
-      <div data-model="Orange Rhino Large"></div>
-      <div data-model="Orange Zebra Gigantic"></div>
-      <div data-model="Quartz Squid Gigantic"></div>
-      <div data-model="Red Bear Giant"></div>
-      <div data-model="Sapphire Cat Gigantic"></div>
-      <div data-model="Silver Shark Gigantic"></div>
-      <div data-model="Turquoise Giraffe Gigantic"></div>
-      <div data-model="Violet Koala Colossal"></div>
-      <div data-model="Violet Shark Giant"></div>
+      <div data-model="Model 1"></div>
+      <div data-model="Model 2"></div>
+      <div data-model="Model 3"></div>
+      <div data-model="Model 4"></div>
+      <div data-model="Model 5"></div>
+      <div data-model="Model 6"></div>
+      <div data-model="Model 7"></div>
+      <div data-model="Model 8"></div>
+      <div data-model="Model 9"></div>
+      <div data-model="Model 10"></div>
+      <div data-model="Model 11"></div>
+      <div data-model="Model 12"></div>
+      <div data-model="Model 13"></div>
+      <div data-model="Model 14"></div>
+      <div data-model="Model 15"></div>
+      <div data-model="Model 16"></div>
+      <div data-model="Model 17"></div>
+      <div data-model="Model 18"></div>
+      <div data-model="Model 19"></div>
+      <div data-model="Model 20"></div>
+      <div data-model="Model 21"></div>
     </div>
     
     <h1 class="title">
@@ -654,7 +655,7 @@
     
     <div class="footer">
       <div class="footer-left">
-        <span class="brand">GS.A.A.T</span> / Made with 💙 by @snaykey 
+        <span class="brand">GS.A.A.T</span> / Made with 💙 by @snaykey 🟦 Source: https://github.com/notsnaykey/GS_AArenaTracker/blob/main/index.html  
       </div>
       <div class="footer-right">
         <span class="interface-version">30.03.2025</span> V0.3
@@ -689,27 +690,27 @@
 	  
 	  // Default models
 	  return [
-		"Aluminum Octopus Giga",
-		"Blue Panda Colossal",
-		"Bronze Lizard Giant",
-		"Bronze Lizard Gigantic",
-		"Brown Rhino Colossal",
-		"Diamond Leopard Large",
-		"Emerald Cheetah Giant",
-		"Emerald Monkey Large",
-		"Green Sardine Large",
-		"Obsidian Bird Large",
-		"Obsidian Fish Huge",
-		"Orange Lobster Giant",
-		"Orange Rhino Large",
-		"Orange Zebra Gigantic",
-		"Quartz Squid Gigantic",
-		"Red Bear Giant",
-		"Sapphire Cat Gigantic",
-		"Silver Shark Gigantic",
-		"Turquoise Giraffe Gigantic",
-		"Violet Koala Colossal",
-		"Violet Shark Giant",
+		"Model 1",
+		"Model 2",
+		"Model 3",
+		"Model 4",
+		"Model 5",
+		"Model 6",
+		"Model 7",
+		"Model 8",
+		"Model 9",
+		"Model 10",
+		"Model 11",
+		"Model 12",
+		"Model 13",
+		"Model 14",
+		"Model 15",
+		"Model 16",
+		"Model 17",
+		"Model 18",
+		"Model 19",
+		"Model 20",
+		"Model 21",
 		"TOTAL", "%"
 	  ];
 	}
@@ -727,27 +728,27 @@
       } else {
         // Fallback to default models
         return [
-          "Aluminum Octopus Giga",
-          "Blue Panda Colossal",
-          "Bronze Lizard Giant",
-          "Bronze Lizard Gigantic",
-          "Brown Rhino Colossal",
-          "Diamond Leopard Large",
-          "Emerald Cheetah Giant",
-          "Emerald Monkey Large",
-          "Green Sardine Large",
-          "Obsidian Bird Large",
-          "Obsidian Fish Huge",
-          "Orange Lobster Giant",
-          "Orange Rhino Large",
-          "Orange Zebra Gigantic",
-          "Quartz Squid Gigantic",
-          "Red Bear Giant",
-          "Sapphire Cat Gigantic",
-          "Silver Shark Gigantic",
-          "Turquoise Giraffe Gigantic",
-          "Violet Koala Colossal",
-          "Violet Shark Giant",
+			"Model 1",
+			"Model 2",
+			"Model 3",
+			"Model 4",
+			"Model 5",
+			"Model 6",
+			"Model 7",
+			"Model 8",
+			"Model 9",
+			"Model 10",
+			"Model 11",
+			"Model 12",
+			"Model 13",
+			"Model 14",
+			"Model 15",
+			"Model 16",
+			"Model 17",
+			"Model 18",
+			"Model 19",
+			"Model 20",
+			"Model 21",
           "TOTAL", "%"
         ];
       }
@@ -1589,66 +1590,73 @@
       }
     }
     
-    // Set up model configuration modal
-    function setupModelModal() {
-      const openBtn = document.getElementById('openSettingsBtn');
-      const closeBtn = document.getElementById('closeModelModal');
-      const cancelBtn = document.getElementById('cancelModelBtn');
-      const saveBtn = document.getElementById('saveModelBtn');
-      const modal = document.getElementById('modelModal');
-      const modelInput = document.getElementById('modelInput');
-      
-      // Populate textarea with current models
-      modelInput.value = models
-        .filter(model => model !== "TOTAL" && model !== "%")
-        .join('\n');
-      
-      // Open modal
-      openBtn.addEventListener('click', () => {
-        modal.classList.add('active');
-      });
-      
-      // Close modal functions
-      const closeModal = () => {
-        modal.classList.remove('active');
-      };
-      
-      closeBtn.addEventListener('click', closeModal);
-      cancelBtn.addEventListener('click', closeModal);
-      
-      // Save changes
-      saveBtn.addEventListener('click', () => {
-        const modelLines = modelInput.value.trim().split('\n')
-          .map(line => line.trim())
-          .filter(line => line !== '');
-        
-        if (modelLines.length === 0) {
-          alert('Please enter at least one model name.');
-          return;
-        }
-        
-        // Save to localStorage
-        localStorage.setItem('aiSafetyTestingModels', JSON.stringify(modelLines));
-        
-        // Update models array
-        models = [...modelLines, "TOTAL", "%"];
-        
-        // Reset grid state for compatibility with new models
-        resetGridStateForNewModels();
-        
-        // Rebuild table
-        buildTableHeader();
-        buildTableRows();
-        
-        // Update stats
-        updateStatsDisplay();
+	// Set up model configuration modal
+	function setupModelModal() {
+	  const openBtn = document.getElementById('openSettingsBtn');
+	  const closeBtn = document.getElementById('closeModelModal');
+	  const cancelBtn = document.getElementById('cancelModelBtn');
+	  const saveBtn = document.getElementById('saveModelBtn');
+	  const modal = document.getElementById('modelModal');
+	  const modelInput = document.getElementById('modelInput');
+	  
+	  // Populate textarea with current models
+	  modelInput.value = models
+		.filter(model => model !== "TOTAL" && model !== "%")
+		.join('\n');
+	  
+	  // Open modal
+	  openBtn.addEventListener('click', () => {
+		modal.classList.add('active');
+	  });
+	  
+	  // Close modal functions
+	  const closeModal = () => {
+		modal.classList.remove('active');
+	  };
+	  
+	  closeBtn.addEventListener('click', closeModal);
+	  cancelBtn.addEventListener('click', closeModal);
+	  
+	  // Save changes
+	  saveBtn.addEventListener('click', () => {
+		// Process the input text to filter out lines with "breaks"
+		const inputText = modelInput.value.trim();
+		const allLines = inputText.split('\n');
 		
-        makeTableFitScreen();
-        
-        // Close modal
-        closeModal();
-      });
-    }
+		// Filter to keep only lines that don't contain the word "breaks"
+		const modelLines = allLines
+		  .filter(line => !line.includes('breaks'))
+		  .map(line => line.trim())
+		  .filter(line => line !== '');
+		
+		if (modelLines.length === 0) {
+		  alert('Please enter at least one model name.');
+		  return;
+		}
+		
+		// Save to localStorage
+		localStorage.setItem('aiSafetyTestingModels', JSON.stringify(modelLines));
+		
+		// Update models array
+		models = [...modelLines, "TOTAL", "%"];
+		
+		// Reset grid state for compatibility with new models
+		resetGridStateForNewModels();
+		
+		// Rebuild table
+		buildTableHeader();
+		buildTableRows();
+		
+		// Update stats
+		updateStatsDisplay();
+		
+		// Apply size adjustments to maintain consistency
+		makeTableFitScreen();
+		
+		// Close modal
+		closeModal();
+	  });
+	}
     
     // Reset grid state for compatibility with new models
     function resetGridStateForNewModels() {
