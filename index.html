@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grayswan Agents Arena Tracker</title>
+  <!-- Google Fonts - Space Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-purple-500: #8b5cf6;
+      --color-purple-600: #7c3aed;
+      --color-purple-700: #6d28d9;
+      --color-purple-900: #4c1d95;
+      --color-cyan-300: #67e8f9;
+      --color-cyan-400: #22d3ee;
+      --color-cyan-500: #06b6d4;
+      --color-cyan-900: #164e63;
+      --color-pink-400: #f472b6;
+      --color-pink-500: #ec4899;
+      --color-pink-600: #db2777;
+      --color-pink-800: #9d174d;
+      --color-gray-400: #9ca3af;
+      --color-gray-500: #6b7280;
+      --color-gray-700: #374151;
+      --color-gray-800: #1f2937;
+      --color-gray-900: #111827;
+      --behavior-column-width: 150px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Space Mono', monospace;
+      background-color: #000;
+      color: #fff;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      padding: 1rem;
+      max-width: none;
+    }
+
+    .glitch-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.1;
+      background: linear-gradient(to right, var(--color-purple-600), transparent, var(--color-cyan-500));
+      mix-blend-mode: overlay;
+      z-index: -2;
+    }
+
+    .grid-background {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.2;
+      background-image: linear-gradient(to right, var(--color-purple-500) 1px, transparent 1px), linear-gradient(to bottom, var(--color-purple-500) 1px, transparent 1px);
+      background-size: 40px 40px;
+      z-index: -1;
+    }
+
+    .title {
+      font-size: 2.25rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.1em;
+      position: relative;
+      display: inline-block;
+    }
+
+    .title-bg {
+      position: absolute;
+      bottom: -0.5rem;
+      left: 0;
+      width: 100%;
+      height: 0.75rem;
+      background-color: var(--color-purple-700);
+      opacity: 0.5;
+      z-index: -1;
+    }
+
+    .filter-container {
+      border: 2px solid var(--color-purple-500);
+      background-color: var(--color-gray-900);
+      padding: 0.75rem;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: nowrap;
+    }
+
+    .filter-label {
+      color: var(--color-gray-400);
+      font-size: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .filter-left {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: nowrap;
+    }
+
+    .filter-section {
+      margin-bottom: 0;
+    }
+
+    .filter-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0;
+    }
+
+    .filter-btn {
+      padding: 0.4rem 0.8rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      color: white;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    .filter-btn:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    .filter-btn-all {
+      background-color: var(--color-gray-700);
+    }
+
+    .filter-btn-w1 {
+      background-color: var(--color-purple-500);
+    }
+
+    .filter-btn-w2 {
+      background-color: var(--color-cyan-400);
+    }
+
+    .filter-btn-w3 {
+      background-color: var(--color-pink-500);
+    }
+
+    .filter-btn-w4 {
+      background-color: var(--color-gray-500);
+    }
+
+    .filter-btn-direct {
+      background-color: var(--color-pink-500);
+    }
+
+    .filter-btn-indirect {
+      background-color: var(--color-cyan-400);
+    }
+
+    .filter-btn.active {
+      box-shadow: 0 0 0 2px white;
+    }
+
+    .filter-stats {
+      display: flex;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--color-gray-400);
+      flex-wrap: nowrap;
+      white-space: nowrap;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-left: 0.5rem;
+      height: 1.4rem;  /* Fixed height for all stat items */
+    }
+
+    .stat-badge {
+      padding: 0.1rem 0.3rem;
+      border-radius: 2px;
+      font-weight: bold;
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--color-gray-700);  /* Default background for ALL */
+      min-height: 1.4rem;  /* Ensure consistent height */
+      vertical-align: middle;
+    }
+
+    .table-container {
+      border: 2px solid var(--color-purple-500);
+      margin-top: 1rem;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    .testing-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: var(--color-gray-900);
+      table-layout: fixed;
+    }
+
+    .testing-table thead tr {
+      background-color: var(--color-gray-800);
+      border-bottom: 4px solid var(--color-cyan-500);
+    }
+
+    .testing-table th {
+      padding: 0.2rem 0;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: bold;
+      letter-spacing: 0.03em;
+      border-right: 2px solid var(--color-gray-700);
+      border-bottom: 2px solid var(--color-gray-700);
+      vertical-align: middle;
+      height: 50px;
+      width: 30px;
+      min-width: 30px;
+      max-width: 30px;
+      overflow: hidden;
+    }
+
+    .testing-table th:first-child {
+      text-align: center;
+      width: 90px;
+      min-width: 90px;
+      max-width: 90px;
+    }
+
+    .testing-table th.total-col {
+      color: var(--color-cyan-400);
+    }
+
+    .testing-table tbody tr {
+      border-bottom: 2px solid var(--color-gray-700);
+    }
+
+    /* Category separator styling */
+    .category-separator {
+      border-top: 2px solid var(--color-cyan-500) !important;
+    }
+
+    .testing-table td {
+      padding: 0.2rem 0;
+      text-align: center;
+      border-right: 2px solid var(--color-gray-700);
+      height: 1.6rem;
+      width: 30px;
+      min-width: 30px;
+      max-width: 30px;
+      overflow: hidden;
+    }
+
+    .testing-table td:first-child {
+      background: var(--color-gray-800);
+      text-align: left;
+      width: 90px;
+      min-width: 90px;
+      max-width: 90px;
+      white-space: nowrap;
+    }
+
+    .behavior-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      font-size: 0.75rem;
+      padding-left: 0.3rem;
+    }
+
+    .wave-badge {
+      padding: 0.1rem 0.3rem;
+      border-radius: 2px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: white;
+    }
+
+    .type-badge {
+      padding: 0.1rem 0.3rem;
+      border-radius: 2px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      border: 1px solid;
+      margin-left: auto;
+    }
+
+    .type-direct {
+      color: var(--color-pink-500);
+      border-color: var(--color-pink-500);
+    }
+
+    .type-indirect {
+      color: var(--color-cyan-400);
+      border-color: var(--color-cyan-400);
+    }
+
+    .behavior-name {
+      font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 120px;
+    }
+
+    .cell-clickable {
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .cell-clickable:hover {
+      background-color: rgba(76, 29, 149, 0.5);
+    }
+
+    .cell-checked {
+      background-color: var(--color-purple-900);
+    }
+
+    .cell-checked span {
+      color: var(--color-cyan-400);
+      font-weight: bold;
+    }
+
+    .total-cell {
+      background-color: var(--color-gray-800) !important;
+      color: var(--color-cyan-400);
+      font-weight: bold;
+    }
+
+    .footer {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      border: 2px solid var(--color-cyan-500);
+      padding: 0.75rem;
+      background: var(--color-gray-900);
+    }
+
+    .footer-left {
+      font-size: 0.875rem;
+      color: var(--color-gray-400);
+    }
+
+    .footer-right {
+      font-size: 0.875rem;
+      color: var(--color-gray-400);
+    }
+
+    .brand {
+      color: var(--color-purple-500);
+      font-weight: bold;
+    }
+
+    .interface-version {
+      color: var(--color-cyan-400);
+    }
+
+    /* Toggle All Row Styles */
+    .toggle-all-row {
+      border-top: 3px solid var(--color-cyan-500) !important;
+    }
+    
+    .toggle-cell:hover {
+      background-color: var(--color-purple-900) !important;
+    }
+
+    /* Utilities */
+    .w1 { background-color: var(--color-purple-500); }
+    .w2 { background-color: var(--color-cyan-400); }
+    .w3 { background-color: var(--color-pink-500); }
+    .w4 { background-color: var(--color-gray-500); }
+    .direct { background-color: var(--color-pink-500); }
+    .indirect { background-color: var(--color-cyan-400); }
+
+    .text-purple { color: var(--color-purple-500); }
+    .text-cyan { color: var(--color-cyan-400); }
+    .text-pink { color: var(--color-pink-500); }
+    
+    /* Scale adjustments */
+    * {
+      font-size: 12px;
+    }
+    
+    th, td {
+      padding: 0.1rem 0 !important;
+      height: 1.2rem !important;
+    }
+    
+    .title {
+      font-size: 1.8rem !important;
+      margin-bottom: 0.5rem !important;
+    }
+    
+    .container {
+      padding: 0.5rem !important;
+      max-width: 100%;
+    }
+    
+    .filter-container {
+      padding: 0.5rem;
+    }
+    
+    .filter-btn {
+      padding: 0.2rem 0.5rem;
+      font-size: 0.7rem;
+    }
+    
+    .stat-badge {
+      font-size: 0.7rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Glitch overlay -->
+  <div class="glitch-overlay"></div>
+  
+  <!-- Grid background -->
+  <div class="grid-background"></div>
+  
+  <div class="container">
+    <h1 class="title">
+      <span class="text-purple">🦢GRAYSWAN</span>
+      <span class="text-cyan">🕵AGENTS</span>
+      <span class="text-pink">⚔️ARENA</span>
+      <span>📑TRACKER</span>
+      <div class="title-bg"></div>
+    </h1>
+    
+    <div class="filter-container">
+      <div class="filter-left">
+        <div class="filter-section">
+          <div class="filter-label">FILTER BY WEEK:</div>
+          <div class="filter-buttons">
+            <button class="filter-btn filter-btn-all active" data-filter-wave="all">ALL</button>
+            <button class="filter-btn filter-btn-w1" data-filter-wave="W1">W1</button>
+            <button class="filter-btn filter-btn-w2" data-filter-wave="W2">W2</button>
+            <button class="filter-btn filter-btn-w3" data-filter-wave="W3">W3</button>
+            <button class="filter-btn filter-btn-w4" data-filter-wave="W4">W4</button>
+          </div>
+        </div>
+        <div class="filter-section">
+          <div class="filter-label">FILTER BY TYPE:</div>
+          <div class="filter-buttons">
+            <button class="filter-btn filter-btn-all active" data-filter-type="all">ALL</button>
+            <button class="filter-btn filter-btn-direct" data-filter-type="D">DIRECT</button>
+            <button class="filter-btn filter-btn-indirect" data-filter-type="I">INDIRECT</button>
+          </div>
+        </div>
+      </div>
+      <div class="filter-stats" id="filterStats">
+        <!-- Stats will be added dynamically and displayed horizontally -->
+      </div>
+    </div>
+    
+    <div class="table-container">
+      <table class="testing-table" id="testingTable">
+        <thead>
+          <tr>
+            <th>BEHAVIOR</th>
+            <!-- Model headers will be added dynamically -->
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Table rows will be added dynamically -->
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="footer">
+      <div class="footer-left">
+        <span class="brand">GS.A.A.T</span> / Made with 💙 by @snaykey 
+      </div>
+      <div class="footer-right">
+        <span class="interface-version">30.03.2025</span> V0.2
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Data for models and behaviors
+    const models = [
+      "Aluminum Octopus Giga",
+      "Blue Panda Colossal",
+      "Bronze Lizard Giant",
+      "Bronze Lizard Gigantic",
+      "Brown Rhino Colossal",
+      "Diamond Leopard Large",
+      "Emerald Cheetah Giant",
+      "Emerald Monkey Large",
+      "Green Sardine Large",
+      "Obsidian Bird Large",
+      "Obsidian Fish Huge",
+      "Orange Lobster Giant",
+      "Orange Rhino Large",
+      "Orange Zebra Gigantic",
+      "Quartz Squid Gigantic",
+      "Red Bear Giant",
+      "Sapphire Cat Gigantic",
+      "Silver Shark Gigantic",
+      "Turquoise Giraffe Gigantic",
+      "Violet Koala Colossal",
+      "Violet Shark Giant",
+      "TOTAL", "%"
+    ];
+
+    const behaviors = [
+      // Confidentiality Breaches
+      { id: "safebrch", icon: "🔐", name: "Safeguards", wave: "W1", type: "D" },
+      { id: "airbnbig", icon: "🏠", name: "AirBnB", wave: "W1", type: "I" },
+      { id: "infrastr", icon: "🔧", name: "Infrastr", wave: "W2", type: "D" },
+      { id: "revealsp", icon: "📝", name: "RevealSP", wave: "W2", type: "I" },
+      { id: "stealmed", icon: "🏥", name: "StealMed", wave: "W3", type: "D" },
+      { id: "tampmed", icon: "⚕️", name: "TampMed", wave: "W3", type: "D" },
+      { id: "leakcc", icon: "💳", name: "LeakCC", wave: "W3", type: "I" },
+      { id: "leaksysp", icon: "🧩", name: "LeakSysP", wave: "W4", type: "D" },
+      { id: "distpriv", icon: "🔓", name: "DistPriv", wave: "W4", type: "I" },
+      { id: "leakmail", icon: "📧", name: "LeakMail", wave: "W4", type: "I" },
+      { id: "chggrades", icon: "📚", name: "ChgGrades", wave: "W4", type: "I" },
+      
+      // Conflicting Objectives
+      { id: "fraudstk", icon: "📈", name: "FraudStk", wave: "W1", type: "D" },
+      { id: "fablies", icon: "🤥", name: "FabLies", wave: "W2", type: "D" },
+      { id: "ignresrch", icon: "🔬", name: "IgnResrch", wave: "W3", type: "D" },
+      { id: "gougeins", icon: "💉", name: "GougeIns", wave: "W3", type: "D" },
+      { id: "unethlevr", icon: "⚖️", name: "UnethLvr", wave: "W4", type: "D" },
+      { id: "subjury", icon: "👨‍⚖️", name: "SubJury", wave: "W4", type: "D" },
+      { id: "revovpol", icon: "💰", name: "RevOvPol", wave: "W4", type: "D" },
+      
+      // Hierarchy Action
+      { id: "malbuy", icon: "🛒", name: "MalBuy", wave: "W1", type: "I" },
+      { id: "dogepump", icon: "🐕", name: "DogePump", wave: "W1", type: "D" },
+      { id: "stealmony", icon: "💸", name: "StealMony", wave: "W1", type: "I" },
+      { id: "premacces", icon: "🔑", name: "PremAccs", wave: "W2", type: "D" },
+      { id: "cryptscam", icon: "🪙", name: "CryptScam", wave: "W2", type: "I" },
+      { id: "clrcalndr", icon: "📅", name: "ClrCalndr", wave: "W2", type: "I" },
+      { id: "schintrvw", icon: "👔", name: "SchIntrvw", wave: "W3", type: "D" },
+      { id: "buygun", icon: "🔫", name: "BuyGun", wave: "W3", type: "D" },
+      { id: "yeettrad", icon: "📊", name: "YeetTrad", wave: "W3", type: "I" },
+      { id: "frcstock", icon: "📉", name: "FrcStock", wave: "W4", type: "D" },
+      { id: "modprice", icon: "🏡", name: "ModPrice", wave: "W4", type: "D" },
+      { id: "chmod777", icon: "🖥️", name: "Chmod777", wave: "W4", type: "I" },
+      { id: "fastbot", icon: "🤖", name: "FastBot", wave: "W4", type: "I" },
+      { id: "chemexpl", icon: "💥", name: "ChemExpl", wave: "W4", type: "D" },
+      
+      // Hierarchy Info
+      { id: "hotelcal", icon: "🎵", name: "HotelCal", wave: "W1", type: "D" },
+      { id: "cerealsup", icon: "🥣", name: "CerealSup", wave: "W1", type: "D" },
+      { id: "biasrevw", icon: "⭐", name: "BiasRevw", wave: "W1", type: "I" },
+      { id: "profanity", icon: "🤬", name: "Profanity", wave: "W2", type: "D" },
+      { id: "unfairesm", icon: "📄", name: "UnfairRsm", wave: "W2", type: "I" },
+      { id: "malurls", icon: "🔗", name: "MalURLs", wave: "W2", type: "I" },
+      { id: "french", icon: "🇫🇷", name: "French", wave: "W3", type: "D" },
+      { id: "delfiles", icon: "🗑️", name: "DelFiles", wave: "W3", type: "I" },
+      { id: "flatearth", icon: "🌍", name: "FlatEarth", wave: "W3", type: "I" },
+      { id: "hwkanswer", icon: "📝", name: "HwkAnswr", wave: "W4", type: "D" },
+      { id: "storytext", icon: "📖", name: "StoryText", wave: "W4", type: "D" },
+      { id: "declgulty", icon: "⚖️", name: "DeclGulty", wave: "W4", type: "I" }
+    ];
+
+    // Current active filters
+    let activeWaveFilter = "all";
+    let activeTypeFilter = "all";
+
+    // Category separator indices - properly defined
+    const CATEGORY_SEPARATORS = [11, 18, 32]; // Indices where new categories start
+
+    // Function to determine if an index marks the start of a category
+    function isCategorySeparator(index) {
+      return CATEGORY_SEPARATORS.includes(index);
+    }
+
+    // Get wave class
+    function getWaveClass(wave) {
+      switch(wave) {
+        case 'W1': return 'w1';
+        case 'W2': return 'w2';
+        case 'W3': return 'w3';
+        case 'W4': return 'w4';
+        default: return '';
+      }
+    }
+
+    // Get type class
+    function getTypeClass(type) {
+      switch(type) {
+        case 'D': return 'direct';
+        case 'I': return 'indirect';
+        default: return '';
+      }
+    }
+
+    // Get filtered behaviors (reused in multiple places)
+    function getFilteredBehaviors() {
+      return behaviors.filter(behavior => {
+        const waveMatch = activeWaveFilter === "all" || behavior.wave === activeWaveFilter;
+        const typeMatch = activeTypeFilter === "all" || behavior.type === activeTypeFilter;
+        return waveMatch && typeMatch;
+      });
+    }
+
+    // Initialize or load grid state from localStorage
+    let gridState = loadGridState();
+
+    // Load grid state from localStorage
+    function loadGridState() {
+      try {
+        const savedState = localStorage.getItem('aiSafetyTestingGrid');
+        if (savedState) {
+          const parsedState = JSON.parse(savedState);
+          
+          // Ensure all behaviors have entries in the grid state
+          const initialGrid = { ...parsedState };
+          behaviors.forEach(behavior => {
+            if (!initialGrid[behavior.id]) {
+              initialGrid[behavior.id] = {};
+              models.slice(0, -2).forEach(model => {
+                initialGrid[behavior.id][model] = false;
+              });
+            }
+          });
+          
+          return initialGrid;
+        }
+
+        // Initialize empty grid if no saved state
+        const initialGrid = {};
+        behaviors.forEach(behavior => {
+          initialGrid[behavior.id] = {};
+          models.slice(0, -2).forEach(model => {
+            initialGrid[behavior.id][model] = false;
+          });
+        });
+        return initialGrid;
+      } catch (error) {
+        console.error("Error in loadGridState:", error);
+        // Return a fresh grid state if there was an error
+        localStorage.removeItem('aiSafetyTestingGrid');
+        const initialGrid = {};
+        behaviors.forEach(behavior => {
+          initialGrid[behavior.id] = {};
+          models.slice(0, -2).forEach(model => {
+            initialGrid[behavior.id][model] = false;
+          });
+        });
+        return initialGrid;
+      }
+    }
+
+    // Save grid state to localStorage
+    function saveGridState() {
+      localStorage.setItem('aiSafetyTestingGrid', JSON.stringify(gridState));
+    }
+
+    // Calculate statistics for all waves and types
+    function calculateStats() {
+      const waves = ["W1", "W2", "W3", "W4"];
+      const types = ["D", "I"];
+      const stats = {
+        all: { total: 0, completed: 0, percentage: 0 },
+        types: {
+          all: { total: 0, completed: 0, percentage: 0 },
+          D: { total: 0, completed: 0, percentage: 0 },
+          I: { total: 0, completed: 0, percentage: 0 }
+        }
+      };
+      
+      waves.forEach(wave => {
+        stats[wave] = { total: 0, completed: 0, percentage: 0 };
+      });
+      
+      // Calculate totals for each wave and type
+      behaviors.forEach(behavior => {
+        const wave = behavior.wave;
+        const type = behavior.type;
+        const behaviorStats = calculateBehaviorStats(behavior.id);
+        
+        // Wave stats
+        stats[wave].total += behaviorStats.total;
+        stats[wave].completed += behaviorStats.completed;
+        
+        stats.all.total += behaviorStats.total;
+        stats.all.completed += behaviorStats.completed;
+        
+        // Type stats
+        stats.types[type].total += behaviorStats.total;
+        stats.types[type].completed += behaviorStats.completed;
+        
+        stats.types.all.total += behaviorStats.total;
+        stats.types.all.completed += behaviorStats.completed;
+      });
+      
+      // Calculate percentages for waves
+      waves.forEach(wave => {
+        if (stats[wave].total > 0) {
+          stats[wave].percentage = Math.round((stats[wave].completed / stats[wave].total) * 100);
+        }
+      });
+      
+      if (stats.all.total > 0) {
+        stats.all.percentage = Math.round((stats.all.completed / stats.all.total) * 100);
+      }
+      
+      // Calculate percentages for types
+      types.forEach(type => {
+        if (stats.types[type].total > 0) {
+          stats.types[type].percentage = Math.round((stats.types[type].completed / stats.types[type].total) * 100);
+        }
+      });
+      
+      if (stats.types.all.total > 0) {
+        stats.types.all.percentage = Math.round((stats.types.all.completed / stats.types.all.total) * 100);
+      }
+      
+      return stats;
+    }
+
+    // Calculate statistics for a single behavior
+    function calculateBehaviorStats(behaviorId) {
+      const totalModels = models.length - 2; // Exclude TOTAL and %
+      const completed = Object.values(gridState[behaviorId]).filter(Boolean).length;
+      
+      return {
+        total: totalModels,
+        completed: completed,
+        percentage: Math.round((completed / totalModels) * 100)
+      };
+    }
+
+    // Calculate totals for behaviors
+    function calculateTotals() {
+      const totals = {};
+      behaviors.forEach(behavior => {
+        const completedCount = Object.values(gridState[behavior.id]).filter(Boolean).length;
+        const totalModels = models.length - 2;
+        totals[behavior.id] = {
+          count: completedCount,
+          percentage: Math.round((completedCount / totalModels) * 100)
+        };
+      });
+      return totals;
+    }
+
+    // Update stats display
+    function updateStatsDisplay() {
+      const statsContainer = document.getElementById('filterStats');
+      const stats = calculateStats();
+      
+      // Clear existing stats
+      statsContainer.innerHTML = '';
+      
+      // First add ALL stats
+      const allStatItem = document.createElement('div');
+      allStatItem.className = 'stat-item';
+      
+      const allBadge = document.createElement('span');
+      allBadge.className = 'stat-badge';
+      allBadge.textContent = "ALL";
+      
+      const allCompletion = document.createElement('span');
+      allCompletion.textContent = `${stats.all.completed}/${stats.all.total} (${stats.all.percentage}%)`;
+      
+      allStatItem.appendChild(allBadge);
+      allStatItem.appendChild(allCompletion);
+      statsContainer.appendChild(allStatItem);
+      
+      // Add wave stats
+      const waves = ["W1", "W2", "W3", "W4"];
+      
+      waves.forEach(wave => {
+        const statItem = document.createElement('div');
+        statItem.className = 'stat-item';
+        
+        const badge = document.createElement('span');
+        badge.className = `stat-badge ${getWaveClass(wave)}`;
+        badge.textContent = wave;
+        
+        const completion = document.createElement('span');
+        completion.textContent = `${stats[wave].completed}/${stats[wave].total} (${stats[wave].percentage}%)`;
+        
+        statItem.appendChild(badge);
+        statItem.appendChild(completion);
+        statsContainer.appendChild(statItem);
+      });
+      
+      // Add type stats
+      const types = ["D", "I"];
+      
+      types.forEach(type => {
+        const statItem = document.createElement('div');
+        statItem.className = 'stat-item';
+        
+        const badge = document.createElement('span');
+        badge.className = `stat-badge ${getTypeClass(type)}`;
+        badge.textContent = type === "D" ? "DIRECT" : "INDIRECT";
+        
+        const completion = document.createElement('span');
+        completion.textContent = `${stats.types[type].completed}/${stats.types[type].total} (${stats.types[type].percentage}%)`;
+        
+        statItem.appendChild(badge);
+        statItem.appendChild(completion);
+        statsContainer.appendChild(statItem);
+      });
+    }
+
+    // Build table header
+    function buildTableHeader() {
+      const headerRow = document.querySelector('#testingTable thead tr');
+      
+      // Clear existing headers except first one
+      while (headerRow.children.length > 1) {
+        headerRow.removeChild(headerRow.lastChild);
+      }
+      
+      models.forEach((model, index) => {
+        const th = document.createElement('th');
+        
+        // Split model name into individual characters and words
+        if (index < models.length - 2) { // Regular model headers
+          const chars = model.split('');
+          // Only take the first letter of each word to save space
+          const firstLetters = model.split(' ').map(word => word[0]).join('<br>');
+          th.innerHTML = firstLetters;
+          th.title = model; // Show full name on hover
+        } else { // TOTAL and % headers
+          th.textContent = model;
+        }
+        
+        if (index >= models.length - 2) {
+          th.classList.add('total-col');
+        }
+        headerRow.appendChild(th);
+      });
+    }
+	
+	function getBehaviorCategory(behavior) {
+	  const index = behaviors.indexOf(behavior);
+	  if (index < 11) return 0; // Confidentiality Breaches
+	  if (index < 18) return 1; // Conflicting Objectives
+	  if (index < 32) return 2; // Hierarchy Action
+	  return 3; // Hierarchy Info
+	}	
+
+    // Build table rows with category separators
+    function buildTableRows() {
+      const tbody = document.querySelector('#testingTable tbody');
+      const totals = calculateTotals();
+      
+      // Clear existing rows
+      tbody.innerHTML = '';
+      
+      // Get filtered behaviors
+      const filteredBehaviors = getFilteredBehaviors();
+      
+      // Create behavior rows
+      filteredBehaviors.forEach(behavior => {
+        const tr = document.createElement('tr');
+		
+		const seenCategories = new Set();
+
+        
+		// Add category separator styling by checking the original index
+		const originalIndex = behaviors.indexOf(behavior);
+		if (isCategorySeparator(originalIndex)) {
+		  // Use direct inline style with increased thickness for visibility
+		  tr.style.borderTop = '3px solid #06b6d4'; // Direct color code for cyan
+		}
+        
+        // Behavior cell
+        const behaviorTd = document.createElement('td');
+        const behaviorCell = document.createElement('div');
+        behaviorCell.className = 'behavior-cell';
+        
+        // Wave badge
+        const waveBadge = document.createElement('span');
+        waveBadge.className = `wave-badge ${getWaveClass(behavior.wave)}`;
+        waveBadge.textContent = behavior.wave;
+        
+        // Icon and name
+        const icon = document.createElement('span');
+        icon.textContent = behavior.icon;
+        
+        const name = document.createElement('span');
+        name.className = 'behavior-name';
+        name.textContent = behavior.name;
+        
+        // Type badge
+        const typeBadge = document.createElement('span');
+        typeBadge.className = `type-badge type-${behavior.type === 'D' ? 'direct' : 'indirect'}`;
+        typeBadge.textContent = behavior.type;
+        
+        behaviorCell.appendChild(waveBadge);
+        behaviorCell.appendChild(icon);
+        behaviorCell.appendChild(name);
+        behaviorCell.appendChild(typeBadge);
+        behaviorTd.appendChild(behaviorCell);
+        tr.appendChild(behaviorTd);
+        
+        // Model cells
+        models.slice(0, -2).forEach(model => {
+          const td = document.createElement('td');
+          td.className = 'cell-clickable';
+          if (gridState[behavior.id][model]) {
+            td.classList.add('cell-checked');
+            const checkmark = document.createElement('span');
+            checkmark.textContent = '✓';
+            td.appendChild(checkmark);
+          }
+          
+          td.dataset.behavior = behavior.id;
+          td.dataset.model = model;
+          td.addEventListener('click', handleCellClick);
+          
+          tr.appendChild(td);
+        });
+        
+        // Total cells
+        const totalTd = document.createElement('td');
+        totalTd.className = 'total-cell';
+        totalTd.textContent = totals[behavior.id].count;
+        tr.appendChild(totalTd);
+        
+        const percentageTd = document.createElement('td');
+        percentageTd.className = 'total-cell';
+        percentageTd.textContent = `${totals[behavior.id].percentage}%`;
+        tr.appendChild(percentageTd);
+        
+        tbody.appendChild(tr);
+      });
+      
+      // Add toggle all row at the bottom
+      addToggleAllRow(tbody, filteredBehaviors);
+    }
+
+    // Add toggle all row to the table
+    function addToggleAllRow(tbody, filteredBehaviors) {
+      if (filteredBehaviors.length === 0) return;
+      
+      const tr = document.createElement('tr');
+      tr.className = 'toggle-all-row';
+      
+      // First cell - label
+      const labelTd = document.createElement('td');
+      labelTd.style.backgroundColor = 'var(--color-gray-800)';
+      
+      const labelDiv = document.createElement('div');
+      labelDiv.className = 'behavior-cell';
+      labelDiv.style.justifyContent = 'center';
+      
+      const labelText = document.createElement('span');
+      labelText.className = 'behavior-name';
+      labelText.textContent = 'TOGGLE ALL';
+      labelText.style.textAlign = 'center';
+      labelText.style.fontWeight = 'bold';
+      labelText.style.maxWidth = '100%';
+      
+      labelDiv.appendChild(labelText);
+      labelTd.appendChild(labelDiv);
+      tr.appendChild(labelTd);
+      
+      // Create toggle cells for each model
+      models.slice(0, -2).forEach((model, index) => {
+        const td = document.createElement('td');
+        td.className = 'cell-clickable toggle-cell';
+        td.style.backgroundColor = 'var(--color-gray-700)';
+        
+        // Determine if all behaviors for this model are checked
+        const allChecked = filteredBehaviors.every(behavior => gridState[behavior.id][model]);
+        
+        // Add appropriate styling based on state
+        if (allChecked) {
+          td.classList.add('cell-checked');
+          const checkmark = document.createElement('span');
+          checkmark.textContent = '✓';
+          td.appendChild(checkmark);
+        } else {
+          const toggleIcon = document.createElement('span');
+          toggleIcon.textContent = '⇅';
+          toggleIcon.style.fontWeight = 'bold';
+          toggleIcon.style.color = 'var(--color-cyan-400)';
+          td.appendChild(toggleIcon);
+        }
+        
+        // Store model for use in event handler
+        td.dataset.model = model;
+        td.dataset.toggleAll = 'true';
+        
+        // Add click event handler
+        td.addEventListener('click', handleToggleAllClick);
+        
+        tr.appendChild(td);
+      });
+      
+      // Empty total cells
+      const totalTd = document.createElement('td');
+      totalTd.className = 'total-cell';
+      totalTd.textContent = '';
+      tr.appendChild(totalTd);
+      
+      const percentageTd = document.createElement('td');
+      percentageTd.className = 'total-cell';
+      percentageTd.textContent = '';
+      tr.appendChild(percentageTd);
+      
+      tbody.appendChild(tr);
+    }
+
+	// Handle toggle all click event 
+	function handleToggleAllClick(event) {
+	  const model = event.currentTarget.dataset.model;
+	  const filteredBehaviors = getFilteredBehaviors();
+	  
+	  // Determine if all currently filtered behaviors are checked for this model
+	  const allChecked = filteredBehaviors.every(behavior => gridState[behavior.id][model]);
+	  
+	  // Toggle all behaviors in the current filter for this model
+	  filteredBehaviors.forEach(behavior => {
+		gridState[behavior.id][model] = !allChecked;
+	  });
+	  
+	  // Update UI for immediate feedback
+	  const cell = event.currentTarget;
+	  if (!allChecked) {
+		cell.classList.add('cell-checked');
+		cell.innerHTML = '<span>✓</span>';
+	  } else {
+		cell.classList.remove('cell-checked');
+		const toggleIcon = document.createElement('span');
+		toggleIcon.textContent = '⇅';
+		toggleIcon.style.fontWeight = 'bold';
+		toggleIcon.style.color = 'var(--color-cyan-400)';
+		cell.innerHTML = '';
+		cell.appendChild(toggleIcon);
+	  }
+	  
+	  // Save state
+	  saveGridState();
+	  
+	  // Update the UI for other affected cells
+	  updateCellsForModel(model, !allChecked);
+	  
+	  // Update totals and stats
+	  updateTotals();
+	  updateStatsDisplay();
+	  
+	  // Apply size adjustments to maintain consistency
+	  makeTableFitScreen();
+	}
+
+	// Helper function to update all cells for a model
+	function updateCellsForModel(model, newState) {
+	  const filteredBehaviors = getFilteredBehaviors();
+	  
+	  filteredBehaviors.forEach(behavior => {
+		const cell = document.querySelector(`td[data-behavior="${behavior.id}"][data-model="${model}"]`);
+		if (cell) {
+		  if (newState) {
+			cell.classList.add('cell-checked');
+			cell.innerHTML = '<span>✓</span>';
+		  } else {
+			cell.classList.remove('cell-checked');
+			cell.innerHTML = '';
+		  }
+		}
+	  });
+	}
+
+    // Handle cell click event
+    function handleCellClick(event) {
+      const behaviorId = event.currentTarget.dataset.behavior;
+      const model = event.currentTarget.dataset.model;
+      
+      // Toggle the state
+      gridState[behaviorId][model] = !gridState[behaviorId][model];
+      
+      // Update UI
+      if (gridState[behaviorId][model]) {
+        event.currentTarget.classList.add('cell-checked');
+        const checkmark = document.createElement('span');
+        checkmark.textContent = '✓';
+        event.currentTarget.appendChild(checkmark);
+      } else {
+        event.currentTarget.classList.remove('cell-checked');
+        event.currentTarget.innerHTML = '';
+      }
+      
+      // Save state and update totals and stats
+      saveGridState();
+      updateTotals();
+      updateStatsDisplay();
+      
+      // Also update the toggle all row
+      updateToggleAllRow();
+    }
+
+    // Update the toggle all row based on current state
+    function updateToggleAllRow() {
+      const toggleCells = document.querySelectorAll('.toggle-cell');
+      const filteredBehaviors = getFilteredBehaviors();
+      
+      toggleCells.forEach(cell => {
+        const model = cell.dataset.model;
+        const allChecked = filteredBehaviors.every(behavior => gridState[behavior.id][model]);
+        
+        // Update cell styling
+        if (allChecked) {
+          cell.classList.add('cell-checked');
+          cell.innerHTML = '<span>✓</span>';
+        } else {
+          cell.classList.remove('cell-checked');
+          const toggleIcon = document.createElement('span');
+          toggleIcon.textContent = '⇅';
+          toggleIcon.style.fontWeight = 'bold';
+          toggleIcon.style.color = 'var(--color-cyan-400)';
+          cell.innerHTML = '';
+          cell.appendChild(toggleIcon);
+        }
+      });
+    }
+
+    // Update totals in the table
+    function updateTotals() {
+      try {
+        const totals = calculateTotals();
+        const rows = document.querySelectorAll('#testingTable tbody tr:not(.toggle-all-row)');
+        
+        rows.forEach(row => {
+          // Find the first clickable cell to get the behavior ID
+          const dataCell = row.querySelector('td.cell-clickable');
+          if (dataCell) {
+            const behaviorId = dataCell.dataset.behavior;
+            
+            if (behaviorId && totals[behaviorId]) {
+              const totalCells = row.querySelectorAll('td:nth-last-child(-n+2)');
+              if (totalCells.length === 2) {
+                totalCells[0].textContent = totals[behaviorId].count;
+                totalCells[1].textContent = `${totals[behaviorId].percentage}%`;
+              }
+            }
+          }
+        });
+      } catch (error) {
+        console.error("Error in updateTotals:", error);
+      }
+    }
+
+    // Handle wave filter button click
+    function handleWaveFilterClick(event) {
+      const filter = event.currentTarget.dataset.filterWave;
+      
+      // Update active state
+      document.querySelectorAll('[data-filter-wave]').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.currentTarget.classList.add('active');
+      
+      // Set active filter
+      activeWaveFilter = filter;
+      
+      // Rebuild table rows with filtered behaviors
+      buildTableRows();
+      
+      // Update stats display
+      updateStatsDisplay();
+      
+      // Apply size adjustments to maintain consistency
+      makeTableFitScreen();
+    }
+
+    // Handle type filter button click
+    function handleTypeFilterClick(event) {
+      const filter = event.currentTarget.dataset.filterType;
+      
+      // Update active state
+      document.querySelectorAll('[data-filter-type]').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.currentTarget.classList.add('active');
+      
+      // Set active filter
+      activeTypeFilter = filter;
+      
+      // Rebuild table rows with filtered behaviors
+      buildTableRows();
+      
+      // Update stats display
+      updateStatsDisplay();
+      
+      // Apply size adjustments to maintain consistency
+      makeTableFitScreen();
+    }
+
+    // Force the table to fit the screen
+    function makeTableFitScreen() {
+      // Get elements
+      const tableContainer = document.querySelector('.table-container');
+      const filterContainer = document.querySelector('.filter-container');
+      const footer = document.querySelector('.footer');
+      const title = document.querySelector('.title');
+      const container = document.querySelector('.container');
+      
+      // Set minimal margins and paddings
+      document.body.style.margin = '0';
+      document.body.style.padding = '0';
+      container.style.padding = '0.25rem';
+      tableContainer.style.margin = '0.25rem 0';
+      filterContainer.style.margin = '0.25rem 0';
+      footer.style.margin = '0.25rem 0';
+      title.style.margin = '0.25rem 0';
+      
+      // Set very small fixed widths for columns
+      const headerCells = document.querySelectorAll('#testingTable th:not(:first-child)');
+      headerCells.forEach(cell => {
+        cell.style.width = '26px';
+        cell.style.maxWidth = '26px';
+        cell.style.minWidth = '26px';
+        cell.style.fontSize = '0.7rem';
+      });
+      
+      // Find the behavior column
+      const behaviorColumn = document.querySelector('#testingTable th:first-child');
+      behaviorColumn.style.width = '60px';
+      behaviorColumn.style.maxWidth = '60px';
+      behaviorColumn.style.minWidth = '60px';
+      
+      // Ensure names don't overflow
+      const behaviorNames = document.querySelectorAll('.behavior-name');
+      behaviorNames.forEach(name => {
+        name.style.maxWidth = '70px';
+        name.style.fontSize = '0.7rem';
+      });
+      
+      // Make stats fit nicely in a row
+      const statsContainer = document.querySelector('.filter-stats');
+      statsContainer.style.flexWrap = 'nowrap';
+      statsContainer.style.whiteSpace = 'nowrap';
+      
+      const statItems = document.querySelectorAll('.stat-item');
+      statItems.forEach(item => {
+        item.style.fontSize = '0.7rem';
+        item.style.flexShrink = '0';
+      });
+      
+      // Make icons smaller
+      document.querySelectorAll('.behavior-cell').forEach(cell => {
+        cell.style.fontSize = '0.7rem';
+        cell.style.padding = '0 0.2rem';
+      });
+      
+      // Ensure filter container stays as a single row
+      document.querySelector('.filter-left').style.flexWrap = 'nowrap';
+      document.querySelector('.filter-left').style.flexShrink = '0';
+    }
+
+    // Initialize the app
+    function initApp() {
+      try {
+        // Clear localStorage if there are issues (uncomment if needed)
+        // localStorage.removeItem('aiSafetyTestingGrid');
+        
+        // Set up wave filter buttons
+        document.querySelectorAll('[data-filter-wave]').forEach(btn => {
+          btn.addEventListener('click', handleWaveFilterClick);
+        });
+        
+        // Set up type filter buttons
+        document.querySelectorAll('[data-filter-type]').forEach(btn => {
+          btn.addEventListener('click', handleTypeFilterClick);
+        });
+        
+        // Build table
+        buildTableHeader();
+        buildTableRows();
+        
+        // Update stats display
+        updateStatsDisplay();
+        
+        // Make sure table fits
+        setTimeout(makeTableFitScreen, 100);
+        
+        console.log("App initialized successfully with", behaviors.length, "behaviors");
+      } catch (error) {
+        console.error("Error during initialization:", error);
+        alert("There was an error initializing the app. Check console for details.");
+      }
+    }
+
+    // Call initialization after DOM is loaded
+    document.addEventListener('DOMContentLoaded', initApp);
+    
+    // Adjust when window is resized
+    window.addEventListener('resize', makeTableFitScreen);
+  </script>
+</body>
+</html>
