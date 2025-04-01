@@ -1,5 +1,5 @@
 # GS_AArenaTracker
 
-https://notsnaykey.github.io/GS_AArenaTracker/
+https://notsnaykey.github.io/GS_AgentsArenaTracker/
 
-Basic webapp to track progress for the GraySwan Agents Arena. Pre-filled Behaviors, Model names can be customized from the webapp directly/edit source if local copy downloaded
+A basic web app for tracking progress in the GraySwan Agents Arena. Pre-filled Behaviors, Model names are importable via copy-paste from the GS site or editable in the page source. Uses only localStorage — no user data is saved, transmitted, or shared.
